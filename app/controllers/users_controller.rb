@@ -29,6 +29,17 @@ class UsersController < ApplicationController
       end
     end
 
+    def update
+      @user = User.find(params[:id])
+      respond_to do |format|
+        format.json do
+          if @user.update_attributes(params[:user])
+            render json: @user
+          end
+        end
+      end
+    end
+
 
 
 

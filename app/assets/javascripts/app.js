@@ -11,6 +11,32 @@ $( "document" ).ready( function() {
 
 });
 
+App.watchUser = function(user_id) {
+  var user_id = user_id;
+  navigator.geolocation.watchPosition(function(position){
+      var userUpdate = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      $.ajax({
+        type: "PUT",
+        url: "/users/" + user_id,
+        data: {user: userUpdate},
+        dataType: "json"
+      }).done(function(user){
+        console.log(user);
+        App.dropPin(user.lat, user.lng);
+      });
+    });
+};
+
+
+
+
+// navigator.geolocation.watchPosition(function(position){
+// console.log(position)
+// })
+
 App.setEventListeners = function() {
   $("form").on("submit", App.createUser);
   $("#drop-pin").on("click", App.dropPin);
@@ -20,19 +46,23 @@ App.createUser = function(e) {
   e.preventDefault();
   var newUser = {
     name: $("#user_name").val(),
-    email: $("#user_email").val()
+    email: $("#user_email").val(),
+    lat: App.lat,
+    lng: App.lng
   };
+
   $.ajax({
     type: "POST",
     url: "/users",
     data: {user: newUser},
     dataType: "json"
   }).done( function(data) {
-      $("form").reset();
+      $("form").trigger("reset");
       $("#notice").css("display", "inline");
       $("#notice").text("User " + data.name + " was created!");
       $("#notice").fadeOut();
-
+      App.watchUser(data.id);
+      App.dropPin(data.lat, data.lng);
     });
 };
 
@@ -47,8 +77,8 @@ App.makeMap = function() {
 };
 
 
-App.dropPin = function() {
-  var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
+App.dropPin = function(lat, lng) {
+  var myLatlng = new google.maps.LatLng(lat,lng);
   var marker = new google.maps.Marker({
     position: myLatlng,
     title:"Hello World!"
