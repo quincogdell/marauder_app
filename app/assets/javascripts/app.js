@@ -3,7 +3,6 @@ var App = {};
 
 $( "document" ).ready( function() {
   App.setEventListeners();
-  debugger
   navigator.geolocation.getCurrentPosition(function(position){
     App.lat = position.coords.latitude;
     App.lng = position.coords.longitude;
@@ -38,18 +37,12 @@ App.createUser = function(e) {
 };
 
 App.makeMap = function() {
-  // var mapOptions = {
-  //   center: new google.maps.LatLng(-34.397, 150.644),
-  //   zoom: 8,
-  //   mapTypeId: google.maps.MapTypeId.ROADMAP
-  // };
-  debugger
   var mapOptions = {
       zoom: 12,
       center: new google.maps.LatLng(App.lat, App.lng),
       mapTypeId: google.maps.MapTypeId.TERRAIN
     };
-    debugger
+
   App.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 };
 
