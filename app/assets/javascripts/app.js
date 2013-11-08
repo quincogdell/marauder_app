@@ -24,6 +24,7 @@ App.watchUser = function(user_id) {
         data: {user: userUpdate},
         dataType: "json"
       }).done(function(user){
+
         console.log(user);
         App.dropPin(user.lat, user.lng);
       });
