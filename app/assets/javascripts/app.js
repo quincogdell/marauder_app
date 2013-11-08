@@ -3,13 +3,18 @@ var App = {};
 
 $( "document" ).ready( function() {
   App.setEventListeners();
-  App.makeMap();
+  debugger
+  navigator.geolocation.getCurrentPosition(function(position){
+    App.lat = position.coords.latitude;
+    App.lng = position.coords.longitude;
+    App.makeMap();
+  });
+
 });
 
 App.setEventListeners = function() {
   $("form").on("submit", App.createUser);
-  $("#drop-pin").on("click", App.dropPin)
-
+  $("#drop-pin").on("click", App.dropPin);
 };
 
 App.createUser = function(e) {
@@ -32,16 +37,19 @@ App.createUser = function(e) {
     });
 };
 
-
-
-
 App.makeMap = function() {
+  // var mapOptions = {
+  //   center: new google.maps.LatLng(-34.397, 150.644),
+  //   zoom: 8,
+  //   mapTypeId: google.maps.MapTypeId.ROADMAP
+  // };
+  debugger
   var mapOptions = {
-    center: new google.maps.LatLng(-34.397, 150.644),
-    zoom: 8,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
+      zoom: 12,
+      center: new google.maps.LatLng(App.lat, App.lng),
+      mapTypeId: google.maps.MapTypeId.TERRAIN
+    };
+    debugger
   App.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 };
 
@@ -55,3 +63,5 @@ App.dropPin = function() {
 
   marker.setMap(App.map);
 };
+
+
